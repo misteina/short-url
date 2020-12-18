@@ -1,18 +1,20 @@
 {
-  "name": "short-url",
-  "version": "1.0.0",
-  "description": "Shorten urls",
-  "main": "index.js",
-  "scripts": {
-        "start": "nodemon index.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Enyinna Iroegbu",
-  "license": "ISC",
-  "dependencies": {
-        "express": "^4.17.1"
-  },
-  "devDependencies": {
-        "nodemon": "^2.0.6"
-  }
+      "name": "short-url",
+      "version": "1.0.0",
+      "description": "Shorten urls",
+      "main": "index.js",
+      "scripts": {
+            "start": "nodemon index.js",
+            "test": "echo \"Error: no test specified\" && exit 1"
+      },
+      "author": "Enyinna Iroegbu",
+      "license": "ISC",
+      "dependencies": {
+            "express": "^4.17.1",
+            "mysql": "^2.18.1",
+            "valid-url": "^1.0.9"
+      },
+      "devDependencies": {
+            "nodemon": "^2.0.6"
+      }
 }
