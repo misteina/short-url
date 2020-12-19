@@ -12,11 +12,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/:shortcode', require('./handlers/shortcode'));
-app.get('/:custom/:shortcode', require('./handlers/custom'));
+app.get('/:custom_:shortcode', require('./handlers/custom'));
 app.get('/:shortcode/stats', require('./handlers/stats'));
 app.post('/shorten', require('./handlers/shorten'));
 app.post('/usecode', require('./handlers/usecode'));
-app.post('/reset', require('./handlers/reset'));
+app.post('/dbreset', require('./database/reset'));
 app.get('*', require('./handlers/notfound'));
 
 app.listen(port, () => {

@@ -44,7 +44,7 @@ module.exports = function (req, res) {
                             insertUrl(res, port, connection, shortCode, longURL);
                         } else {
                             connection.rollback();
-                            res.json({ status: "error", message: "Limit exceeded" });
+                            res.json({ errId: 1, status: "error", message: "Limit exceeded" });
                         }
                     } else {
                         connection.query('INSERT INTO next_code SET ?', {code6: '0.0.0.0.0.0'}, 
@@ -54,7 +54,7 @@ module.exports = function (req, res) {
                                     insertUrl(res, port, connection, 'aaaaaa', longURL);
                                 } else {
                                     connection.rollback();
-                                    res.json({ status: "error", message: "An error was encountered" });
+                                    res.json({ errId: 2, status: "error", message: "An error was encountered" });
                                 }
                             }
                         );
@@ -68,7 +68,7 @@ module.exports = function (req, res) {
 }
 
 function insertUrl(res, port, connection, shortCode, longURL){
-    connection.query('INSERT INTO urls SET ?', { short: shortCode, long: longURL },
+    connection.query('INSERT INTO urls SET ?', { short: shortCode, original: longURL },
         (error, results, fields) => {
             if (error) throw error;
             if (results.affectedRows === 1) {
@@ -81,7 +81,7 @@ function insertUrl(res, port, connection, shortCode, longURL){
                     res.json({ status: "success", message: "Your short url is http://localhost:" + port + "/" + shortCode });
                 });
             } else {
-                res.json({ status: "error", message: "An error was encountered" });
+                res.json({ errId: 4, status: "error", message: "An error was encountered" });
             }
             connection.rollback();
         }
