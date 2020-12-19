@@ -14,6 +14,24 @@ test('Submit url and get a short code url', async () => {
     expect(response.data.status).toBe('success');
 });
 
+test('Submit a different url and get a different short code url if available', async () => {
+    const response = await axios({
+        method: 'post',
+        url: `http://localhost:${port}/shorten`,
+        data: { url: 'https://www.movingworlds.org/user/15934577583393' }
+    });
+    expect(response.data.status).toBe('success');
+});
+
+test('Customize a short code url', async () => {
+    const response = await axios({
+        method: 'post',
+        url: `http://localhost:${port}/shorten`,
+        data: { url: 'https://www.movingworlds.org/user/38734577583393', custom: "movingworlds" }
+    });
+    expect(response.data.status).toBe('success');
+});
+
 test('Submit short code and get the short code url', async () => {
     const response = await axios({
         method: 'post',
@@ -23,7 +41,7 @@ test('Submit short code and get the short code url', async () => {
     expect(response.data.status).toBe('success');
 });
 
-test('Redirect short code to original when clicked', async () => {
+test('Redirect short code to the original url when clicked', async () => {
     const response = await axios({
         method: 'get',
         url: `http://localhost:${port}/5r76y`,
@@ -31,12 +49,19 @@ test('Redirect short code to original when clicked', async () => {
     expect(response.data.status).toBe('success');
 });
 
-test('Get shortcode statistics', async () => {
+test('Redirect custom short code to the original when clicked', async () => {
+    const response = await axios({
+        method: 'get',
+        url: `http://localhost:${port}/movingworlds/aaaaac`,
+    });
+    expect(response.data.status).toBe('success');
+});
+
+test('Get shortcode stats', async () => {
     const response = await axios({
         method: 'get',
         url: `http://localhost:${port}/5r76y/stats`,
     });
-    console.log(response.data)
     expect(response.data.data).toHaveProperty('clicks');
     expect(response.data.data).toHaveProperty('access');
     expect(response.data.data).toHaveProperty('created');
