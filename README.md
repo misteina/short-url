@@ -15,4 +15,6 @@ SETUP INSTRUCTIONS
 ASSUMPTIONS
 -----------
 
-I assumed that authentication wasn't necessary since it is only a demo.
+1. I assumed that authentication wasn't necessary since it is only a demo.
+
+2. I may have possibly a mistake somewhere which I didn't notice. Nobody is above mistake so I hope I will be pardoned. :-)
