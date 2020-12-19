@@ -12,19 +12,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Shortens a provided long url
-app.post('/shortcodes', require('./handlers/shorten'));
+app.post('/shortcodes', require('./handlers/generate_short_code'));
 
 // Redirects a short code to orginal url
-app.get('/:shortcode', require('./handlers/shortcode'));
+app.get('/:shortcode', require('./handlers/redirect_to_original_url'));
 
 // View short code stats
 app.get('/:shortcode/stats', require('./handlers/stats'));
-
-// Redirects a custom short code to original url 
-app.get('/:custom/:shortcode', require('./handlers/custom'));
-
-// Choose and use a short code if available
-app.post('/shortcodes/choose', require('./handlers/usecode'));
 
 app.post('/db', require('./database/reset'));
 

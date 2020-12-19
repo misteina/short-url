@@ -1,4 +1,4 @@
-// This is the handler that converts and redirects an automatically generated short url to the 
+// This is the handler that converts and redirects a short url to the 
 // original url.
 
 module.exports = function(req, res){
