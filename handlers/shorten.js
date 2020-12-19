@@ -1,3 +1,8 @@
+// This is the route handler that automatically generates the short url.
+// Generating random strings as the short code may look like the easy way out, but the 
+// disadvantage is that clashes can occurr. Therefore, to avoid clashes and repeated checks for 
+// uniqueness the short codes were generated below in a way that clashes will occur.
+
 module.exports = function (req, res) {
 
     const validUrl = require('valid-url');
@@ -12,25 +17,25 @@ module.exports = function (req, res) {
 
         connection.beginTransaction(err => {
             if (err) { throw err; }
-            connection.query('SELECT code6 FROM next_code WHERE id = 1 FOR UPDATE', 
+            connection.query('SELECT next FROM next_code FOR UPDATE', 
                 function (error, results, fields){
                     if (error) {
                         return connection.rollback(() => {throw error});
                     }
                     if (results.length === 1){
-                        let address = results[0].code6.split('.');
+                        let address = results[0].next.split('.');
 
                         for (let i = address.length - 1; i >= 0; i--) {
                             if (address[i] >= 61) {
                                 address[i] = 0;
                             } else if (address[i] < 61) {
-                                address[i] += 1;
+                                address[i] = (parseInt(address[i]) + 1).toString();
                                 break;
                             }
                         }
 
-                        let addressJoin = address.join('.');
-                        if (addressJoin != '0.0.0.0' && addressJoin != '0.0.0.0.0' && addressJoin != '0.0.0.0.0.0') {
+                        let addressCode = address.join('.');
+                        if (addressCode != '0.0.0.0.0.0') {
 
                             let charArray = [];
                             const chars = require('../share/chars');
@@ -41,17 +46,31 @@ module.exports = function (req, res) {
                             let shortCode = charArray.join('');
                             if (typeof customURL !== 'undefined') shortCode = customURL + '/' + shortCode;
 
-                            insertUrl(res, port, connection, shortCode, longURL);
+                            connection.query('UPDATE next_code SET next = ?', [addressCode], 
+                                (error, results, fields) => {
+                                    if (error) throw error;
+                                    if (results.affectedRows === 1){
+                                        insertUrl(res, port, connection, shortCode, longURL);
+                                    } else {
+                                        connection.rollback();
+                                        res.json({ errId: 5, status: "error", message: "An error was encountered" });
+                                    }
+                                }
+                            );
                         } else {
                             connection.rollback();
                             res.json({ errId: 1, status: "error", message: "Limit exceeded" });
                         }
                     } else {
-                        connection.query('INSERT INTO next_code SET ?', {code6: '0.0.0.0.0.0'}, 
+                        connection.query('INSERT INTO next_code SET ?', {next: '0.0.0.0.0.0'}, 
                             (error, results, fields) => {
                                 if (error) throw error;
                                 if (results.affectedRows === 1){
-                                    insertUrl(res, port, connection, 'aaaaaa', longURL);
+
+                                    let shortCode = 'aaaaaa';
+                                    if (typeof customURL !== 'undefined') shortCode = customURL + '/' + shortCode;
+
+                                    insertUrl(res, port, connection, shortCode, longURL);
                                 } else {
                                     connection.rollback();
                                     res.json({ errId: 2, status: "error", message: "An error was encountered" });
@@ -81,9 +100,9 @@ function insertUrl(res, port, connection, shortCode, longURL){
                     res.json({ status: "success", message: "Your short url is http://localhost:" + port + "/" + shortCode });
                 });
             } else {
+                connection.rollback();
                 res.json({ errId: 4, status: "error", message: "An error was encountered" });
             }
-            connection.rollback();
         }
     );
 }

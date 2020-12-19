@@ -1,4 +1,5 @@
-const { connect } = require('../database/connection');
+// This is the handler that converts and redirects an automatically generated short url to the 
+// original url.
 
 module.exports = function(req, res){
     
@@ -11,12 +12,28 @@ module.exports = function(req, res){
 
         connection.query('SELECT original FROM urls WHERE short = ?', [shortCode], 
             (error, results, fields) => {
+
                 if (error) throw error;
+
                 if (results.length === 1){
-                    connection.query('UPDATE urls SET clicks = clicks + 1 WHERE short = ?', [shortCode]);
-                    res.json({ status: "success", message: "I will redirect to " + results[0].original });
+
+                    let originalUrl = results[0].original;
+
+                    connection.query('UPDATE urls SET clicks = clicks + 1 WHERE short = ?', [shortCode], 
+                        (error, results, fields) => {
+
+                            if (error) throw error;
+                            
+                            if (results.affectedRows === 1){
+                                res.json({ status: "success", message: "I will redirect to " + originalUrl });
+                            } else {
+                                res.json({ errId: 1, status: "error", message: "An error was encountered" });
+                            }
+                        }
+                    );
+                    
                 } else {
-                    res.json({ errId: 1, status: "error", message: "Short code does not exist" });
+                    res.json({ errId: 2, status: "error", message: "Short code does not exist" });
                 }
             }
         );

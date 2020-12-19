@@ -1,3 +1,5 @@
+// This route handler shows the stats of the short url.
+
 module.exports = function (req, res) {
 
     const shortCode = req.params.shortcode;
@@ -10,7 +12,9 @@ module.exports = function (req, res) {
 
         connection.query('SELECT clicks, access, created FROM urls WHERE short = ?', [shortCode], 
             (error, results, fields) => {
+
                 if (error) throw error;
+                
                 if (results.length === 1){
                     res.json({ 
                         status: "success", 
