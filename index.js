@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Shortens a provided long url
-app.post('/shorten', require('./handlers/shorten'));
+app.post('/shortcodes', require('./handlers/shorten'));
 
 // Redirects a short code to orginal url
 app.get('/:shortcode', require('./handlers/shortcode'));
@@ -23,10 +23,10 @@ app.get('/:shortcode/stats', require('./handlers/stats'));
 // Redirects a custom short code to original url 
 app.get('/:custom/:shortcode', require('./handlers/custom'));
 
-// Use a provided a short code if available
-app.post('/usecode', require('./handlers/usecode'));
+// Choose and use a short code if available
+app.post('/shortcodes/choose', require('./handlers/usecode'));
 
-app.post('/dbreset', require('./database/reset'));
+app.post('/db', require('./database/reset'));
 
 app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}`);
