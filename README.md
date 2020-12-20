@@ -17,4 +17,6 @@ ASSUMPTIONS
 
 1. I assumed that authentication wasn't necessary since it is only a demo.
 
+2. Custom short codes chosen by users has a maxmum length of 5 characters to avoid clashes with automatically generated short codes and also to differenciate it from automatically generated codes having a fixed length of 6 characters.
+
 2. I may have possibly made a mistake somewhere which I didn't notice. Nobody is above mistake so I hope I will be pardoned. :-)
