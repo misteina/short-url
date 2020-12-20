@@ -4,9 +4,9 @@
 module.exports = function(req, res){
     
     const shortCode = req.params.shortcode;
-    const isValid = require('../share/validateCode');
+    const checkCode = require('../share/validateCode');
 
-    if (isValid(shortCode)){
+    if (checkCode.isValid(shortCode)){
 
         const connection = require('../database/connection');
 

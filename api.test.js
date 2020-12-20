@@ -27,7 +27,7 @@ test('Choose a short code and get the short code if available', async () => {
     const response = await axios({
         method: 'post',
         url: `http://localhost:${port}/shortcodes`,
-        data: { url: 'https://www.movingworlds.org/user/78734577583393', custom: "moving", mode: "custom" }
+        data: { url: 'https://www.movingworlds.org/user/78734577583393', custom: "movin", mode: "custom" }
     });
     expect(response.data.status).toBe('success');
 });

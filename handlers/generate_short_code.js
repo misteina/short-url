@@ -8,7 +8,6 @@ module.exports = function (req, res) {
 
     const port = require('../share/port');
     const validUrl = require('valid-url');
-    const isValidCode = require('../share/validateCode');
 
     const longURL = req.body.url;
     const customCode = req.body.custom;
@@ -88,7 +87,9 @@ module.exports = function (req, res) {
             res.json({ status: "error", message: "The provided url is invalid" });
         }
     } else {
-        if (isValidCode(customCode)) {
+        const newCode = require('../share/validateCode');
+
+        if (newCode.isCustom(customCode)) {
 
             if (validUrl.isUri(longURL)) {
 
